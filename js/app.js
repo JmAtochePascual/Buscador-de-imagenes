@@ -1,6 +1,7 @@
 // Selectores
 const formularioElement = document.querySelector('#formulario');
 const resultadoioElement = document.querySelector('#resultado');
+const REGISTRO_POR_PAGINA = 30;
 
 // Inicializar la aplicación
 const init = (e) => {
@@ -75,6 +76,12 @@ const mostrarImagenes = (imagenes) => {
       </div>
     `;
   });
+};
+
+
+// Calcular el total de páginas
+const calcularPaginas = (total) => {
+  return parseInt(Math.ceil(total / REGISTRO_POR_PAGINA));
 };
 
 
