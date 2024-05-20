@@ -39,7 +39,6 @@ const mostrarAlerta = (mensaje) => {
 };
 
 
-
 // Buscar imágenes
 const buscarImagenes = (termino) => {
   const key = '43978898-eb71b43492de25e6f0b80dab6';
@@ -48,10 +47,35 @@ const buscarImagenes = (termino) => {
   fetch(URLAPI)
     .then(respuesta => respuesta.json())
     .then(resultado => {
-      // mostrarImagenes(resultado.hits);
-      console.log(resultado.hits);
+      mostrarImagenes(resultado.hits);
     });
 }
+
+
+// Muestra las imagenes
+const mostrarImagenes = (imagenes) => {
+  // Eliminar las imágenes previas
+  while (resultadoioElement.firstChild) {
+    resultadoioElement.removeChild(resultadoioElement.firstChild);
+  }
+
+  imagenes.forEach(imagen => {
+    const { previewURL, likes, views, largeImageURL } = imagen;
+
+    resultadoioElement.innerHTML += `
+      <div class="w-full md:w-1/3 lg:w-1/4 p-3 mb-4">
+        <div class="bg-white">
+          <img class="w-full imagen" src="${previewURL}" alt="Imagen de Pixabay">
+          <div class="p-4">
+            <p class="font-bold"> ${likes} <span class="font-light">Me gusta</span></p>
+            <p class="font-bold"> ${views} <span class="font-light">Vistas</span></p>
+            <a class="block w-full bg-blue-800 hover:bg-blue-500 text-white uppercase text-center rounded mt-5 p-1" href="${largeImageURL}" target="_blank" rel="noopener noreferrer">Ver Imagen</a>
+          </div>
+        </div>
+      </div>
+    `;
+  });
+};
 
 
 // Cargar Eventos
