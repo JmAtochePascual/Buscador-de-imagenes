@@ -13,6 +13,7 @@ const init = (e) => {
     return;
   };
 
+  buscarImagenes(terminoDeBusqueda);
 };
 
 
@@ -36,6 +37,22 @@ const mostrarAlerta = (mensaje) => {
     }, 3000);
   };
 };
+
+
+
+// Buscar imágenes
+const buscarImagenes = (termino) => {
+  const key = '43978898-eb71b43492de25e6f0b80dab6';
+  const URLAPI = `https://pixabay.com/api/?key=${key}&q=${termino}&per_page=100`;
+
+  fetch(URLAPI)
+    .then(respuesta => respuesta.json())
+    .then(resultado => {
+      // mostrarImagenes(resultado.hits);
+      console.log(resultado.hits);
+    });
+}
+
 
 // Cargar Eventos
 document.addEventListener('DOMContentLoaded', () => {
