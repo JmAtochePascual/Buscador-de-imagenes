@@ -2,7 +2,7 @@
 const formularioElement = document.querySelector('#formulario');
 const resultadoioElement = document.querySelector('#resultado');
 const paginacionlement = document.querySelector('#paginacion');
-const REGISTRO_POR_PAGINA = 50;
+const REGISTRO_POR_PAGINA = 20;
 let totaldePaginas;
 let paginaActual = 1;
 
