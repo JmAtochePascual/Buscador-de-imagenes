@@ -16,7 +16,7 @@ const init = (e) => {
     mostrarAlerta('Agrega un término de búsqueda');
     return;
   };
-
+  paginaActual = 1;
   buscarImagenes(terminoDeBusqueda);
 };
 
