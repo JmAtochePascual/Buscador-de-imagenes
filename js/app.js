@@ -1,7 +1,8 @@
 // Selectores
 const formularioElement = document.querySelector('#formulario');
 const resultadoioElement = document.querySelector('#resultado');
-const REGISTRO_POR_PAGINA = 30;
+const REGISTRO_POR_PAGINA = 50;
+let totaldePaginas;
 
 // Inicializar la aplicación
 const init = (e) => {
@@ -48,6 +49,7 @@ const buscarImagenes = (termino) => {
   fetch(URLAPI)
     .then(respuesta => respuesta.json())
     .then(resultado => {
+      totaldePaginas = calcularPaginas(resultado.totalHits);
       mostrarImagenes(resultado.hits);
     });
 }
@@ -76,13 +78,20 @@ const mostrarImagenes = (imagenes) => {
       </div>
     `;
   });
+
 };
 
 
 // Calcular el total de páginas
-const calcularPaginas = (total) => {
-  return parseInt(Math.ceil(total / REGISTRO_POR_PAGINA));
-};
+const calcularPaginas = (total) => parseInt(Math.ceil(total / REGISTRO_POR_PAGINA));
+
+
+// Generar el paginador
+function* crearPaginador(total) {
+  for (let i = 1; i <= total; i++) {
+    yield i;
+  }
+}
 
 
 // Cargar Eventos
