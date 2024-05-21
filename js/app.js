@@ -91,33 +91,22 @@ const mostrarImagenes = (imagenes) => {
 const calcularPaginas = (total) => parseInt(Math.ceil(total / REGISTRO_POR_PAGINA));
 
 
-// Generar el paginador
-function* crearPaginador(total) {
-  for (let i = 1; i <= total; i++) {
-    yield i;
-  }
-}
-
-
 // Muestra la paginación
 const imprimirPaginador = () => {
   while (paginacionlement.firstChild) {
     paginacionlement.removeChild(paginacionlement.firstChild);
   }
 
-  const iterador = crearPaginador(totaldePaginas);
-
   for (let i = 1; i <= totaldePaginas; i++) {
-    const { value } = iterador.next();
 
     const boton = document.createElement('a');
     boton.href = '#';
-    boton.dataset.pagina = value;
-    boton.textContent = value;
+    boton.dataset.pagina = i;
+    boton.textContent = i;
     boton.classList.add('siguiente', 'bg-yellow-400', 'px-4', 'py-1', 'mr-2', 'font-bold', 'mb-4', 'rounded', 'hover:bg-yellow-500', 'hover:text-white');
 
     boton.onclick = () => {
-      paginaActual = value;
+      paginaActual = i;
 
       buscarImagenes();
     }
