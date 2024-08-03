@@ -60,6 +60,6 @@ Este proyecto está bajo la licencia [MIT](https://opensource.org/licenses/MIT).
 
 ## 🌐 Ver Proyecto en la WEB
 
-Puedes ver el proyecto en funcionamiento [aquí](https://jmatochepacual.github.io/Buscador-de-imagenes/).
+Puedes ver el proyecto en funcionamiento [aquí](https://jmatochepascual.github.io/Buscador-de-imagenes/).
 
 Todos los derechos reservados Buscador de Imágenes 2024 ©.
