@@ -1,77 +1,65 @@
-// Selectores
-const formularioElement = document.querySelector('#formulario');
-const resultadoioElement = document.querySelector('#resultado');
-const paginacionlement = document.querySelector('#paginacion');
-const REGISTRO_POR_PAGINA = 20;
-let totaldePaginas;
-let paginaActual = 1;
+const formElement = document.querySelector('#formulario');
+const resultElement = document.querySelector('#resultado');
+const paginationElement = document.querySelector('#paginacion');
+const inputElement = document.querySelector('#termino');
+const STEP = 20;
+let totalPages;
+let currentPage = 1;
 
-// Inicializar la aplicación
-const init = (e) => {
-  e.preventDefault();
+const startApp = async (event) => {
+  event.preventDefault();
 
-  const terminoDeBusqueda = document.querySelector('#termino').value.trim();
-
-  if (terminoDeBusqueda === '') {
-    mostrarAlerta('Agrega un término de búsqueda');
+  if (inputElement.value.trim() === '') {
+    showAlert('Agrega un término de búsqueda');
     return;
   };
-  paginaActual = 1;
-  buscarImagenes(terminoDeBusqueda);
+
+  currentPage = 1;
+
+  searchImages();
 };
 
+const showAlert = (message) => {
+  const alert = document.querySelector('.alerta-error');
 
-// Muestra el mensaje de alerta
-const mostrarAlerta = (mensaje) => {
-  const alerta = document.querySelector('.alerta-error');
+  if (!alert) {
+    const alert = document.createElement('p');
+    alert.classList.add('bg-red-100', 'border-red-400', 'text-red-700', 'px-4', 'py-3', 'rounded', 'max-w-lg', 'mx-auto', 'mt-6', 'text-center', 'alerta-error');
 
-  if (!alerta) {
-    const alerta = document.createElement('p');
-    alerta.classList.add('bg-red-100', 'border-red-400', 'text-red-700', 'px-4', 'py-3', 'rounded', 'max-w-lg', 'mx-auto', 'mt-6', 'text-center', 'alerta-error');
-
-    alerta.innerHTML = `
+    alert.innerHTML = `
       <strong class="font-bold">Error!</strong>
-      <span class="block">${mensaje}</span>
+      <span class="block">${message}</span>
     `;
 
-    formularioElement.appendChild(alerta);
+    formElement.appendChild(alert);
 
     setTimeout(() => {
-      alerta.remove();
+      alert.remove();
     }, 3000);
   };
 };
 
-
-// Buscar imágenes
-const buscarImagenes = async () => {
-  const terminoDeBusqueda = document.querySelector('#termino').value.trim();
-
+const searchImages = async () => {
   const key = '43978898-eb71b43492de25e6f0b80dab6';
-  const URLAPI = `https://pixabay.com/api/?key=${key}&q=${terminoDeBusqueda}&per_page=${REGISTRO_POR_PAGINA}&page=${paginaActual}`;
+  const URL = `https://pixabay.com/api/?key=${key}&q=${inputElement.value.trim()}&per_page=${STEP}&page=${currentPage}`;
 
   try {
-    const respuesta = await fetch(URLAPI);
-    const resultado = await respuesta.json();
-    totaldePaginas = calcularPaginas(resultado.totalHits);
-    mostrarImagenes(resultado.hits);
+    const response = await fetch(URL);
+    const data = await response.json();
+    totalPages = calculePages(data.totalHits);
+    showImages(data.hits);
   } catch (error) {
     console.log(error, "Error en la busqueda de imagenes");
-  }
-}
+  };
+};
 
-
-// Muestra las imagenes
-const mostrarImagenes = (imagenes) => {
-  // Eliminar las imágenes previas
-  while (resultadoioElement.firstChild) {
-    resultadoioElement.removeChild(resultadoioElement.firstChild);
-  }
+const showImages = (imagenes) => {
+  cleanHtml();
 
   imagenes.forEach(imagen => {
     const { previewURL, likes, views, largeImageURL } = imagen;
 
-    resultadoioElement.innerHTML += `
+    resultElement.innerHTML += `
       <div class="w-full md:w-1/3 lg:w-1/4 p-3 mb-4">
         <div class="bg-white">
           <img class="w-full imagen" src="${previewURL}" alt="Imagen de Pixabay">
@@ -85,40 +73,38 @@ const mostrarImagenes = (imagenes) => {
     `;
   });
 
-  imprimirPaginador();
+  showPagination();
 };
 
-
-// Calcular el total de páginas
-const calcularPaginas = (total) => parseInt(Math.ceil(total / REGISTRO_POR_PAGINA));
-
-
-// Muestra la paginación
-const imprimirPaginador = () => {
-  while (paginacionlement.firstChild) {
-    paginacionlement.removeChild(paginacionlement.firstChild);
-  }
-
-  for (let i = 1; i <= totaldePaginas; i++) {
-
-    const boton = document.createElement('a');
-    boton.href = '#';
-    boton.dataset.pagina = i;
-    boton.textContent = i;
-    boton.classList.add('siguiente', 'bg-yellow-400', 'px-4', 'py-1', 'mr-2', 'font-bold', 'mb-4', 'rounded', 'hover:bg-yellow-500', 'hover:text-white');
-
-    boton.onclick = () => {
-      paginaActual = i;
-
-      buscarImagenes();
-    }
-
-    paginacionlement.appendChild(boton);
-  }
+const cleanHtml = () => {
+  while (resultElement.firstChild) {
+    resultElement.removeChild(resultElement.firstChild);
+  };
 };
 
+const calculePages = (total) => parseInt(Math.ceil(total / STEP));
 
-// Cargar Eventos
+const showPagination = () => {
+  while (paginationElement.firstChild) {
+    paginationElement.removeChild(paginationElement.firstChild);
+  };
+
+  for (let i = 1; i <= totalPages; i++) {
+    const buttomPagination = document.createElement('a');
+    buttomPagination.href = '#';
+    buttomPagination.dataset.pagina = i;
+    buttomPagination.textContent = i;
+    buttomPagination.classList.add('siguiente', 'bg-yellow-400', 'px-4', 'py-1', 'mr-2', 'font-bold', 'mb-4', 'rounded', 'hover:bg-yellow-500', 'hover:text-white');
+
+    buttomPagination.onclick = () => {
+      currentPage = i;
+      searchImages();
+    };
+
+    paginationElement.appendChild(buttomPagination);
+  };
+};
+
 document.addEventListener('DOMContentLoaded', () => {
-  formularioElement.addEventListener('submit', init);
+  formElement.addEventListener('submit', startApp);
 });
